@@ -600,7 +600,7 @@ const TOOLS = [
 // Main Server Class
 // ============================================================================
 
-class MusicGPTMCPServer {
+export class MusicGPTMCPServer {
   private server: Server;
   private axiosInstance: AxiosInstance;
   private config: ServerConfig;
@@ -1344,9 +1344,13 @@ class MusicGPTMCPServer {
   /**
    * Start the MCP server
    */
+  async connect(transport: any): Promise<void> {
+    await this.server.connect(transport);
+  }
+
   async run(): Promise<void> {
     const transport = new StdioServerTransport();
-    await this.server.connect(transport);
+    await this.connect(transport);
     console.error("MusicGPT MCP Server running on stdio");
   }
 }
@@ -1355,7 +1359,7 @@ class MusicGPTMCPServer {
 // Main Execution
 // ============================================================================
 
-const config: ServerConfig = {
+export const config: ServerConfig = {
   apiKey: process.env.MUSICGPT_API_KEY,
   baseUrl: process.env.MUSICGPT_BASE_URL || "https://api.musicgpt.com/api/public/v1",
   timeout: process.env.MUSICGPT_TIMEOUT
@@ -1370,8 +1374,10 @@ if (!config.apiKey) {
   process.exit(1);
 }
 
-const server = new MusicGPTMCPServer(config);
-server.run().catch((error) => {
-  console.error("Fatal error:", error);
-  process.exit(1);
-});
+if (!process.env.VERCEL) {
+  const server = new MusicGPTMCPServer(config);
+  server.run().catch((error) => {
+    console.error("Fatal error:", error);
+    process.exit(1);
+  });
+}
