@@ -1,0 +1,45 @@
+{
+  "name": "mcp-server-musicgpt",
+  "version": "1.0.2",
+  "description": "MCP server for MusicGPT AI audio API - music generation, voice conversion, audio processing",
+  "main": "dist/index.js",
+  "type": "module",
+  "bin": {
+    "mcp-server-musicgpt": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "mcp",
+    "musicgpt",
+    "music-generation",
+    "ai-music",
+    "voice-conversion",
+    "audio-processing",
+    "model-context-protocol"
+  ],
+  "author": "pasie15",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pasie15/mcp-server-musicgpt.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pasie15/mcp-server-musicgpt/issues"
+  },
+  "homepage": "https://github.com/pasie15/mcp-server-musicgpt#readme",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "axios": "^1.7.9"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
