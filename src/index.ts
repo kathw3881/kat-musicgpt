@@ -1272,18 +1272,29 @@ export class MusicGPTMCPServer {
       throw new McpError(ErrorCode.InvalidParams, "prompt is required");
     }
 
-    const response = await this.axiosInstance.get("/lyrics_generator", {
-      params: {
-        prompt: args.prompt,
-        genre: args.genre,
-      },
+    // MusicGPT no longer exposes the old standalone /lyrics_generator route
+    // in the current public API. Prompt mode on MusicAI is the documented
+    // way to have MusicGPT generate lyrics automatically.
+    const prompt = args.genre
+      ? `Write and generate a song with original ${args.genre} lyrics. ${args.prompt}`
+      : `Write and generate a song with original lyrics. ${args.prompt}`;
+
+    const response = await this.axiosInstance.post("/MusicAI", {
+      prompt,
+      music_style: args.genre,
+      make_instrumental: false,
+      vocal_only: false,
     });
 
     return {
       content: [
         {
           type: "text",
-          text: JSON.stringify(response.data, null, 2),
+          text:
+            "MusicGPT lyric generation started through MusicAI prompt mode. " +
+            "The lyrics will be included in the completed conversion result.\n\n" +
+            JSON.stringify(response.data, null, 2) +
+            "\n\nUse get_conversion_by_id with conversionType MUSIC_AI and the returned task_id or conversion_id to retrieve the completed result and lyrics.",
         },
       ],
     };
